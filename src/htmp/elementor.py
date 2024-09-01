@@ -1,32 +1,29 @@
+from __future__ import annotations
+
 import re as _re
 from typing import TYPE_CHECKING as _TYPE_CHECKING
 
-from docsman.html import el as _el
+import htmp
+import htmp.element as _el
 
 if _TYPE_CHECKING:
     from typing import Literal
-    from docsman.container import ContentInputType
-    from docsman.html.element import AttrsInputType
-    from pyprotocol import Stringable as _Stringable
-    TableCellContent = _Stringable | tuple[_Stringable, AttrsInputType]
-    TableRowContent = list[TableCellContent]
-    TableRowsContent = list[TableRowContent | tuple[TableRowContent, AttrsInputType]]
+    from htmp.protocol import ContentInputType, AttrsInputType, Stringable, TableRowsContent
 
 
 def custom_element(
     name: str,
     content: ContentInputType = None,
-    attrs: AttrsType | None = None,
+    attrs: AttrsInputType = None,
     void: bool = False,
-) -> ContentElement | VoidElement:
+) -> _el.ContentElement | _el.VoidElement:
     if void:
-        return VoidElement(name=name, attrs=attrs)
-    return ContentElement(
+        return _el.VoidElement(name=name, attrs=attrs)
+    return _el.ContentElement(
         name=name,
-        content=_create_container(content),
+        content=htmp.container_from_object(content),
         attrs=attrs,
     )
-
 
 
 def heading(
@@ -40,7 +37,7 @@ def heading(
 
 
 def paragraph(
-    text: _Stringable,
+    text: Stringable,
     style: dict[str, dict] | None = None,
     align: Literal["left", "center", "right", "justify"] = None,
     attrs: AttrsInputType = None,
@@ -55,8 +52,8 @@ def paragraph(
 
 
 def picture_color_scheme(
-    src_light: _Stringable,
-    src_dark: _Stringable,
+    src_light: Stringable,
+    src_dark: Stringable,
     attrs_img: AttrsInputType = None,
     attrs_picture: AttrsInputType = None,
     attrs_source_light: AttrsInputType = None,
@@ -104,7 +101,7 @@ def picture_color_scheme(
 
 
 def picture_from_sources(
-    src: _Stringable,
+    src: Stringable,
     attrs_sources: list[AttrsInputType],
     attrs_picture: AttrsInputType = None,
     attrs_img: AttrsInputType = None,
@@ -137,7 +134,7 @@ def table_from_rows(
     rows_head: TableRowsContent | None = None,
     rows_foot: TableRowsContent | None = None,
     as_figure: bool = False,
-    caption: _Stringable = None,
+    caption: Stringable = None,
     first_cell_header: bool = False,
     attrs_figure: AttrsInputType = None,
     attrs_caption: AttrsInputType = None,
@@ -304,7 +301,7 @@ def table_from_rows(
 
 
 def unordered_list(
-    items: list[_Stringable | tuple[_Stringable, AttrsInputType]],
+    items: list[Stringable | tuple[Stringable, AttrsInputType]],
     type: Literal["disc", "circle", "square"] | None = None,
     attrs_li: AttrsInputType = None,
     attrs_ul: AttrsInputType = None,
@@ -316,7 +313,7 @@ def unordered_list(
 
 
 def ordered_list(
-    items: list[_Stringable | tuple[_Stringable, AttrsInputType]],
+    items: list[Stringable | tuple[Stringable, AttrsInputType]],
     type: Literal["1", "a", "A", "i", "I"] | None = None,
     start: int | None = None,
     reversed: bool = False,
@@ -334,7 +331,7 @@ def ordered_list(
 
 
 def _create_list_items(
-    items: list[_Stringable | tuple[_Stringable, AttrsInputType]],
+    items: list[Stringable | tuple[Stringable, AttrsInputType]],
     attrs_li: AttrsInputType = None,
 ) -> list[_el.LI]:
     li_elems = []

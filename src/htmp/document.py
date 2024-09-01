@@ -1,11 +1,13 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING as _TYPE_CHECKING
 
-from docsman import html as _html
+import htmp
+import htmp.element as _el
 
 if _TYPE_CHECKING:
-    from docsman.html.container import Container
-    from docsman.html.element import AttrsInputType
-    from docsman.container import ContentInputType
+    from htmp.container import Container
+    from htmp.protocol import AttrsInputType
 
 
 class Document:
@@ -33,19 +35,19 @@ class Document:
         return sep.join([f"<!DOCTYPE {self.doctype}>", self.html.str(indent=indent)])
 
     @property
-    def html(self) -> _html.el.HTML:
-        return _html.el.html([part for part in [self.head, self.body] if part], self.attrs_html)
+    def html(self) -> _el.HTML:
+        return _el.html([part for part in [self.head, self.body] if part], self.attrs_html)
 
     @property
-    def head(self) -> _html.el.HEAD | None:
+    def head(self) -> _el.HEAD | None:
         if self.content_head or self.attrs_head:
-            return _html.el.head(self.content_head, self.attrs_head)
+            return _el.head(self.content_head, self.attrs_head)
         return
 
     @property
-    def body(self) -> _html.el.BODY | None:
+    def body(self) -> _el.BODY | None:
         if self.content_body or self.attrs_body:
-            return _html.el.body(self.content_body, self.attrs_body)
+            return _el.body(self.content_body, self.attrs_body)
         return
 
     def __str__(self):
@@ -108,13 +110,13 @@ class Document:
         """
         base_url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js"
         style_href = f"{base_url}/{version}/styles/{style}.min.css"
-        self.content_head[key_stylesheet] = _html.el.link(rel="stylesheet", href=style_href)
+        self.content_head[key_stylesheet] = _el.link(rel="stylesheet", href=style_href)
 
         scripts = [
-            _html.el.script(src=f"{base_url}/{version}/highlight.min.js")
+            _el.script(src=f"{base_url}/{version}/highlight.min.js")
         ]
         for language in languages or []:
-            scripts.append(_html.el.script(src=f"{base_url}/{version}/languages/{language}.min.js"))
-        scripts.append(_html.el.script("hljs.highlightAll();"))
-        self.content_body[key_scripts] = _html.container(scripts)
+            scripts.append(_el.script(src=f"{base_url}/{version}/languages/{language}.min.js"))
+        scripts.append(_el.script("hljs.highlightAll();"))
+        self.content_body[key_scripts] = htmp.container_from_object(scripts)
         return

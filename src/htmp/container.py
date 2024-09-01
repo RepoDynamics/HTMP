@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING as _TYPE_CHECKING
 
 from htmp.protocol import HTMLCode as _HTMLCode, MDCode as _MDCode

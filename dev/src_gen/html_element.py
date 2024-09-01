@@ -1,6 +1,6 @@
 from pathlib import Path as _Path
 
-import pyserials as _ps
+# import pyserials as _ps
 
 
 RESERVED_PYTHON_KEYWORDS = [

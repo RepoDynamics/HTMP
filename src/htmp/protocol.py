@@ -32,3 +32,8 @@ ContentInputType = (
 )
 
 AttrsType = dict[str, Stringable | bool]
+AttrsInputType = AttrsType | None
+
+TableCellContent = Stringable | tuple[Stringable, AttrsType]
+TableRowContent = list[TableCellContent]
+TableRowsContent = list[TableRowContent | tuple[TableRowContent, AttrsType]]
