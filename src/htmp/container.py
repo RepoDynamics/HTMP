@@ -6,25 +6,21 @@ from htmp.protocol import HTMLCode as _HTMLCode, MDCode as _MDCode
 from htmp import display as _display
 
 if _TYPE_CHECKING:
-    from htmp.protocol import ContentType
+    from htmp.protocol import ContentType, ContainerContentType
 
 
 class Container:
 
     _IS_HTML_CODE = True
 
-    def __init__(
-        self,
-        *unlabeled_contents: ContentType,
-        **labeled_contents: ContentType,
-    ):
-        self._data = {}
-        self.add(*unlabeled_contents, **labeled_contents)
+    def __init__(self, content: ContainerContentType | None = None):
+        self._data = content or {}
         return
 
     def str(self, indent: int = 3) -> str:
-        contents = []
+        str_sep = " " if indent < 0 else "\n"
         in_str = False
+        contents = []
         curr_str_elements = []
         for content in self._data.values():
             if not isinstance(content, (_HTMLCode, _MDCode)):
@@ -32,7 +28,6 @@ class Container:
                 in_str = True
                 continue
             if in_str:
-                str_sep = " " if indent < 0 else "\n"
                 contents.append(str_sep.join(curr_str_elements))
                 curr_str_elements = []
                 in_str = False
@@ -43,6 +38,8 @@ class Container:
                 md_sep = "\n\n" if indent < 0 else "\n"
                 contents.append(f"{md_sep}{str(content).strip()}{md_sep}")
         content_sep = "" if indent < 0 else "\n"
+        if curr_str_elements:
+            contents.append(str_sep.join(curr_str_elements))
         return content_sep.join(contents)
 
     def display(self, ipython: bool = False, as_md: bool = False) -> None:
@@ -58,7 +55,7 @@ class Container:
                     raise ValueError("Key already exists in content.")
                 self._data[key] = value
         if unlabeled_contents:
-            first_available_int_key = max(key for key in self._data.keys() if isinstance(key, int)) + 1
+            first_available_int_key = max((key for key in self._data.keys() if isinstance(key, int)), default=0) + 1
             for idx, elem in enumerate(unlabeled_contents):
                 self._data[first_available_int_key + idx] = elem
             return list(range(first_available_int_key, first_available_int_key + len(unlabeled_contents)))

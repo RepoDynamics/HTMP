@@ -12,10 +12,11 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 from htmp.comment import Comment
 from htmp.container import Container
 from htmp.document import Document
+from htmp.element import Element
 from htmp import display, element, elementor, spec
 
 if _TYPE_CHECKING:
-    from htmp.protocol import ContentType, ContentInputType
+    from htmp.protocol import ContentType, ContentInputType, AttrsInputType
 
 
 def comment(
@@ -29,18 +30,40 @@ def container(
     *unlabeled_contents: ContentType,
     **labeled_contents: ContentType,
 ) -> Container:
-    return Container(*unlabeled_contents, **labeled_contents)
+    container_ = Container()
+    container_.add(*unlabeled_contents, **labeled_contents)
+    return container_
 
 
 def container_from_object(content: ContentInputType = None) -> Container:
+    if isinstance(content, Container):
+        return content
+    container_ = Container()
     if not content:
-        return Container()
+        return container_
     if isinstance(content, dict):
-        return Container(**content)
+        container_.add(**content)
+        return container_
     if isinstance(content, (list, tuple)):
-        return Container(*content)
-    return Container(content)
+        container_.add(*content)
+        return container_
+    container_.add(content)
+    return container_
 
 
-def document() -> Document:
-    return Document(container(), container())
+def document(
+    content_head: ContentInputType = None,
+    content_body: ContentInputType = None,
+    attrs_head: AttrsInputType = None,
+    attrs_body: AttrsInputType = None,
+    attrs_html: AttrsInputType = None,
+    doctype: str = "html",
+) -> Document:
+    return Document(
+        container_from_object(content_head),
+        container_from_object(content_body),
+        attrs_head=attrs_head,
+        attrs_body=attrs_body,
+        attrs_html=attrs_html,
+        doctype=doctype,
+    )

@@ -44,9 +44,6 @@ def ipython(content: str, as_md: bool = False) -> None:
         If True, the function uses the `IPython.display.Markdown` renderer,
         otherwise (by default) it uses the `IPython.display.HTML` renderer
     """
-    if ipython:
-        renderer = _display.Markdown if as_md else _display.HTML
-        _display.display(renderer(content))
-        return
-
+    renderer = _display.Markdown if as_md else _display.HTML
+    _display.display(renderer(content))
     return

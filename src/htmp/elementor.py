@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING as _TYPE_CHECKING
 
 import htmp
 import htmp.element as _el
+from htmp.markdown import Markdown as _Markdown
 
 if _TYPE_CHECKING:
     from typing import Literal
@@ -24,6 +25,10 @@ def custom_element(
         content=htmp.container_from_object(content),
         attrs=attrs,
     )
+
+
+def markdown(content: Stringable) -> _Markdown:
+    return _Markdown(content)
 
 
 def heading(
@@ -97,7 +102,7 @@ def picture_color_scheme(
     img_attributes_full = {
         "src": args["src_light" if default_light else "src_dark"]
     } | (attrs_img or {})
-    return picture_from_sources(sources_attributes, attrs_picture, img_attributes_full)
+    return picture_from_sources(src=src_light, attrs_sources=sources_attributes, attrs_picture=attrs_picture, attrs_img=img_attributes_full)
 
 
 def picture_from_sources(

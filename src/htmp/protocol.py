@@ -23,11 +23,14 @@ class MDCode(_Protocol):
         ...
 
 
+
 ContentType = Stringable | HTMLCode | MDCode
+ContainerContentType = dict[str | int, ContentType]
 ContentInputType = (
-    dict[str | int, ContentType]
+    ContainerContentType
     | list[ContentType]
     | tuple[ContentType]
+    | ContentType
     | None
 )
 

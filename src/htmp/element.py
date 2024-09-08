@@ -12,6 +12,8 @@ if _TYPE_CHECKING:
 
 class Element:
 
+    _IS_HTML_CODE = True
+
     def __init__(self, name: str, void: bool, attrs: AttrsType | None = None):
         self.name = name
         self.attrs = attrs or {}
@@ -22,11 +24,16 @@ class Element:
         """Get the HTML syntax of the element's opening tag."""
         attrs = []
         for key, val in sorted(self.attrs.items()):
-            if val is None:
+            if not val:
                 continue
-            if isinstance(val, bool):
-                if val:
-                    attrs.append(f"{key}")
+            if isinstance(val, bool) and val:
+                attrs.append(f"{key}")
+            elif isinstance(val, (tuple, list)):
+                attrs.append(f'{key}="{" ".join(_py_html.escape(str(v)) for v in val)}"')
+            elif isinstance(val, dict):
+                attrs.append(
+                    f'{key}="{"; ".join(f"{_py_html.escape(str(k))}: {_py_html.escape(str(v))}" for k, v in val.items())}"'
+                )
             else:
                 attrs.append(f'{key}="{_py_html.escape(str(val))}"')
         tag_start = f"<{self.name}"
