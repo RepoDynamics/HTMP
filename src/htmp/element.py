@@ -58,9 +58,9 @@ class Element:
 
     def __str__(self):
         """HTML syntax of the element as a one-line string."""
-        return self.str(indent=-1)
+        return self.source(indent=-1)
 
-    def str(self, indent: int = 3, tag_length_threshold: int = 80) -> str:
+    def source(self, indent: int = 3, tag_length_threshold: int = 80) -> str:
         """Get the HTML syntax of the element."""
         ...
 
@@ -71,7 +71,7 @@ class VoidElement(Element):
         super().__init__(name=name, void=True, attrs=attrs)
         return
 
-    def str(self, indent: int = 3, length_threshold: int = 80) -> str:
+    def source(self, indent: int = 3, length_threshold: int = 80) -> str:
         return self.tag(indent=indent, length_threshold=length_threshold)
 
     def __repr__(self):
@@ -94,8 +94,8 @@ class ContentElement(Element):
         self.content = content
         return
 
-    def str(self, indent: int = 3, length_threshold: int = 80) -> str:
-        content = self.content.str(indent=indent)
+    def source(self, indent: int = 3, length_threshold: int = 80) -> str:
+        content = self.content.source(indent=indent)
         if indent < 0:
             sep = ""
         else:

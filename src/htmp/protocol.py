@@ -1,6 +1,6 @@
 from typing import Protocol as _Protocol, runtime_checkable as _runtime_checkable, Any
 
-from pyprotocol import Stringable
+from protocolman import Stringable
 
 
 @_runtime_checkable
@@ -9,7 +9,7 @@ class HTMLCode(_Protocol):
 
     _IS_HTML_CODE: Any
 
-    def str(self, indent: int) -> str:
+    def source(self, indent: int) -> str:
         ...
 
 
@@ -34,7 +34,7 @@ ContentInputType = (
     | None
 )
 
-AttrsType = dict[str, Stringable | bool]
+AttrsType = dict[str, Stringable | bool | list[Stringable], dict[Stringable, Stringable]]
 AttrsInputType = AttrsType | None
 
 TableCellContent = Stringable | tuple[Stringable, AttrsType]

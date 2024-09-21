@@ -14,10 +14,10 @@ class Comment:
         self.content = content
         return
 
-    def str(self, indent: int = 3):
+    def source(self, indent: int = 3):
         open_tag = "<!--"
         close_tag = "-->"
-        content = self.content.str(indent=indent)
+        content = self.content.source(indent=indent)
         if indent < 0:
             sep = " "
         else:
@@ -27,4 +27,4 @@ class Comment:
         return f"{open_tag}{sep}{content}{sep}{close_tag}"
 
     def __str__(self):
-        return self.str(indent=-1)
+        return self.source(indent=-1)

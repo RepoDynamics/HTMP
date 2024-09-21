@@ -30,9 +30,9 @@ class Document:
         self.doctype = doctype
         return
 
-    def str(self, indent: int = 3) -> str:
+    def source(self, indent: int = 3) -> str:
         sep = "" if indent < 0 else "\n"
-        return sep.join([f"<!DOCTYPE {self.doctype}>", self.html.str(indent=indent)])
+        return sep.join([f"<!DOCTYPE {self.doctype}>", self.html.source(indent=indent)])
 
     @property
     def html(self) -> _el.HTML:
@@ -51,7 +51,7 @@ class Document:
         return
 
     def __str__(self):
-        return self.str(indent=-1)
+        return self.source(indent=-1)
 
     def add_highlight_js(
         self,

@@ -140,7 +140,7 @@ def table_from_rows(
     rows_foot: TableRowsContent | None = None,
     as_figure: bool = False,
     caption: Stringable = None,
-    first_cell_header: bool = False,
+    num_cols_stub: int = 0,
     attrs_figure: AttrsInputType = None,
     attrs_caption: AttrsInputType = None,
     attrs_table: AttrsInputType = None,
@@ -187,9 +187,8 @@ def table_from_rows(
         If it is a `markitup.html.element.Caption` or `markitup.html.element.Figcaption` element,
         it will be used as is,
         otherwise it will be used to create a `<caption>` or `<figcaption>` element (cf. `as_figure`).
-    first_cell_header : bool, optional
-        If True, the first cell in each row will be rendered as a `<th>` element.
-        Otherwise, all cells will be rendered as a `<td>` element.
+    num_cols_stub : int, default: 0
+        Number of cells in each row to be rendered as `<th>` instead of `<td>` elements.
         This parameter is ignored for the head rows.
     attrs_figure : ElementAttributesDictType, optional
         Attributes for the `<figure>` element, if `as_figure` is set to `True`.
@@ -283,7 +282,7 @@ def table_from_rows(
                 else:
                     cell_content = cell
                     cell_attrs = {}
-                if section == "head" or (cell_idx == 0 and first_cell_header):
+                if section == "head" or (cell_idx < num_cols_stub):
                     cell_attrs = attrs_th | section_th_attrs | cell_attrs
                     cell_func = _el.th
                 else:

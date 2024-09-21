@@ -17,7 +17,7 @@ class Container:
         self._data = content or {}
         return
 
-    def str(self, indent: int = 3) -> str:
+    def source(self, indent: int = 3) -> str:
         str_sep = " " if indent < 0 else "\n"
         in_str = False
         contents = []
@@ -32,7 +32,7 @@ class Container:
                 curr_str_elements = []
                 in_str = False
             if isinstance(content, (Container, _HTMLCode)):
-                contents.append(content.str(indent=indent))
+                contents.append(content.source(indent=indent))
             else:
                 # Markdown element
                 md_sep = "\n\n" if indent < 0 else "\n"
@@ -87,4 +87,4 @@ class Container:
         return bool(self._data)
 
     def __str__(self) -> str:
-        self.str(indent=-1)
+        self.source(indent=-1)
