@@ -294,7 +294,8 @@ def table_from_rows(
     if caption and not isinstance(caption, (_el.CAPTION, _el.FIGCAPTION)):
         attrs_caption = attrs_caption or {}
         caption_func_name = "figcaption" if as_figure else "caption"
-        caption = globals()[caption_func_name](caption, attrs_caption)
+        caption_func = getattr(_el, caption_func_name)
+        caption = caption_func(caption, attrs_caption)
     if as_figure:
         fig_content = [caption] if caption else []
         fig_content.append(_el.table(table_content, attrs_table))
