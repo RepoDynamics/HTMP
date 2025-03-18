@@ -17,10 +17,10 @@ namespaces = true
 # ----------------------------------------- Project Metadata -------------------------------------
 #
 [project]
-version = "0.0.0.dev5"
+version = "0.1.0"
 name = "HTMP"
 requires-python = ">=3.10"
 dependencies = [
     "IPython",
-    "ProtocolMan == 0.0.0.dev2",
+    "ProtocolMan >=0.1,<0.2",
 ]
